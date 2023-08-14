@@ -8,7 +8,8 @@ class Bot:
 
     user = ""
     password = ""
-    IMAGES_FOLDER = '/Images/Login/'
+    IMAGES_FOLDER = './Images/Login/'
+    DEBUG = True
 
     def __init__(self, user, password) -> None:
         self.user = user
@@ -18,30 +19,33 @@ class Bot:
     def image(self, name):
         return self.IMAGES_FOLDER + name
 
+    def info(self, data):
+        if self.DEBUG:
+            print(data)
+
     def start_browser(self):
         os.system(
             'C:\Program^ Files\Google\Chrome\Application\chrome.exe "https://listen.tidal.com/login?autoredirect=true&lang=es" --profile-directory="aaa" ')
         time.sleep(4)
 
-    # screenWidth, screenHeight = pyautogui.size()
-    # currentMouseX, currentMouseY = pyautogui.position()
-
     def complete_user(self):
+
+        screenWidth, screenHeight = pyautogui.size()
+        currentMouseX, currentMouseY = pyautogui.position()
 
         image = ''
 
-        try:
-            image = 'user_not_clicked.png'
+        image = 'user_not_clicked.png'
+        if len(list(pyautogui.locateAllOnScreen(self.image(image)))):
+            self.info(image)
+        else:
+            image = 'user_clicked.png'
             pyautogui.locateAllOnScreen(self.image(image))
-        except Exception:
-            try:
-                image = 'user_clicked.png'
-                pyautogui.locateAllOnScreen(self.image(image))
-            except Exception:
-                print("Complete User: ERROR")
+            self.info(image)
 
+        self.info(self.image(image))
         pyautogui.moveTo(self.image(image))
-        pyautogui.click(self.image(image))
+        # pyautogui.click(self.image(image))
         user1, user2 = self.user.split('@')
         pyautogui.write(user1, interval=0.25)
         pyperclip.copy('@')
