@@ -22,41 +22,61 @@ class Bot:
         os.system(
             'C:\Program^ Files\Google\Chrome\Application\chrome.exe "https://listen.tidal.com/login?autoredirect=true&lang=es" --profile-directory="aaa" ')
         time.sleep(4)
+
     # screenWidth, screenHeight = pyautogui.size()
     # currentMouseX, currentMouseY = pyautogui.position()
 
-    def login(self):
-        button = list(pyautogui.locateAllOnScreen(self.image('button.png')))
-        print(button)
-        pyautogui.moveTo(self.image('button.png'))
-        pyautogui.click(self.image('button.png'))
+    def complete_user(self):
+
+        image = ''
+
+        try:
+            image = 'user_not_clicked.png'
+            pyautogui.locateAllOnScreen(self.image(image))
+        except Exception:
+            try:
+                image = 'user_clicked.png'
+                pyautogui.locateAllOnScreen(self.image(image))
+            except Exception:
+                print("Complete User: ERROR")
+
+        pyautogui.moveTo(self.image(image))
+        pyautogui.click(self.image(image))
         user1, user2 = self.user.split('@')
         pyautogui.write(user1, interval=0.25)
         pyperclip.copy('@')
         pyautogui.hotkey('ctrl', 'v')
         pyautogui.write(user2, interval=0.25)
+
         pyautogui.moveTo(self.image('continue.png'))
         pyautogui.click()
+
+    def complete_password(self):
         try:
-            pyautogui.moveTo(self.image('password.png'))
+            pyautogui.moveTo(self.image('password_not_clicked.png'))
             pyautogui.click()
         except Exception:
             try:
-                pyautogui.moveTo(self.image('pass2.png'))
+                pyautogui.moveTo(self.image('password_clicked.png'))
                 pyautogui.click()
             except Exception:
-                pyautogui.moveTo(self.image('pass3.png'))
+                pyautogui.moveTo(self.image('password_clicked_bar.png'))
                 pyautogui.click()
 
         pyautogui.write(self.password, interval=0.25)
         pyautogui.moveTo(self.image('enter.png'))
         pyautogui.click()
 
+    def login(self):
+
+        self.complete_user()
+        self.complete_password()
+
+
 # https://pyautogui.readthedocs.io/en/latest/quickstart.html
 
 
 # start Chrome 'https://listen.tidal.com/login?autoredirect=true&lang=es'
-
 
 bot = Bot("gitrejamla@gufum.com", "hellsaus1")
 bot.start_browser()
